@@ -1,0 +1,4 @@
+add new db
+add new pinecone
+add new github
+try free gbt

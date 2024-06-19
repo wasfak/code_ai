@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Note {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  note        String
+  description String
+  content     String?
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("notes")
+}
+
+model User {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId           String  @unique
+  email             String  @unique
+  username          String  @unique
+  photo             String
+  firstName         String?
+  lastName          String?
+  remainingDuration Int?    @default(3600)
+
+  @@map("users")
+}
+
+model Patient {
+  id                     String    @id @default(auto()) @map("_id") @db.ObjectId
+  fullName               String
+  userId                 String    @unique
+  medicalCondition       String?
+  age                    String
+  gender                 String
+  phoneNumber            String
+  email                  String? // Optional
+  address                String?
+  emergencyContacts      String?
+  maritalStatus          String?
+  smokingStatus          String?
+  insuranceCarrier       String?
+  alcoholConsumption     String?
+  physicalActivity       String?
+  dietaryHabits          String?
+  policyNumber           String?
+  groupID                String?
+  occupation             String?
+  height                 String?
+  supportSystem          String?
+  weight                 String?
+  educationLevel         String?
+  insuranceContactNumber String?
+  livingArrangement      String?
+  medicalHistories       String?
+  psychiatricHistories   String?
+  intakeAssessments      String?
+  additionalNotes        String?
+  History                History[]
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+}
+
+model History {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  patientId  String   @unique @db.ObjectId
+  diagnosis  String?
+  treatments String?
+  notes      String?
+  patient    Patient  @relation(fields: [patientId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  WIDOWED
+  DIVORCED
+  SEPARATED
+}
+
+enum SmokingStatus {
+  CurrentSmoker
+  formerSmoker
+  neverSmoked
+}
